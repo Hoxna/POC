@@ -1,14 +1,16 @@
+
+
 ## Streamlit on Windows
 tested with python=3.8.0
 
 
 ## Python -m pip install --upgrade pip
 #
-instalation:
-# pip install streamlit
+instalation, we use 'boto3' to upload files to AWS S3,:
+# pip install streamlit boto3
 
 To run "Hello world":
 # streamlit hello
 
-Run your own streamlit "my_file"project:
-Streamlit run "my_file.py"
+To run your streamlit project:
+# streamlit run my_project_name.py
