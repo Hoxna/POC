@@ -4,8 +4,8 @@ import streamlit as st
 
 # use your AWS bucket keys
 s3 = boto3.client('s3', 
-                  aws_access_key_id='AKIAVN4OGAPCIY3XYJHM',
-                  aws_secret_access_key='7szYHWKVNxX7YEsJTO+6cQvC7O6QBPLswkyALM00')
+                  aws_access_key_id='key_id',
+                  aws_secret_access_key='key_id')
 
 # use your AWS bucket name
 bucket_name = 'dmytrobuck2'
