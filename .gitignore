@@ -5,6 +5,14 @@ __pycache__/
 .idea
 ./idea/*
 
+
+test.py
+aws_credentials.py
+datatruck/datatruck/settings.py
+# vps_key.pem
+# HoxnaServerKey.pem
+*.pem
+
 # C extensions
 *.so
 POC.code-workspace

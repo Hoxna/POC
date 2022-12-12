@@ -1,12 +1,7 @@
 
+Python -m pip install --upgrade pip
 
-## Streamlit on Windows
-tested with python=3.8.0
-
-
-## Python -m pip install --upgrade pip
-#
-instalation, we use 'boto3' to upload files to AWS S3,:
+Use 'boto3' to upload files to AWS S3,:
 # pip install streamlit boto3
 
 To run "Hello world":
