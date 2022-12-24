@@ -1,4 +1,51 @@
-# POC
+# About
+
+The project makes it possible to use the nerfstudio without CLI.
+It is intended for using on AWS cloud servers.
+
+
+# Quickstart
+
+## 1. Installation: 
+Tested with nerfstudio==0.1.14 version
+Install nerfstudio 0.1.14 on cloud server, https://github.com/nerfstudio-project/nerfstudio
+```bash
+python -m pip install nerfstudio==0.1.14
+````
+After nerfstudio installed you need to make two changes in nerfstudio code:
+ - navigate to 
+```cd nerfstudio/nerfstudio/configs```
+   - change file ```experiment_config.py```,- after "config_yaml_path = base_dir / "config_yml" (line 121) add next:
+   - ```with open('/home/ubuntu/files/path.txt', 'w') as file:```
+   ```file.write(f'{config_yaml_path}')```
+and second:
+   - in base_config.py
+   - quit_on_train_completion: bool = False CHANGE to True
+
+### requirements:
+```python -m pip install -r requirements.txt```
+
+CUDA must be installed on the system. Has been tested with version 11.7. Installing CUDA [here](https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html)
+
+## 2.nginx
+To be able to access django app with ip address you need install nginx server
+https://ubuntu.com/tutorials/install-and-configure-nginx#4-setting-up-virtual-host
+```sudo apt update```,
+```sudo apt install nginx```
+change server_name:
+
+```sudo nano /etc/nginx/sites-available/default```, change "servet_name" to your ip address
+and restart nginx ```sudo service nginx restart```
+
+## 3.Run
+activate your conda environment, navigate to datatruck folder, run
+```python manage.py runserver```
+now django app will be able on cloud server ip address
+
+
+
+
+
 
 ## Diagram
 

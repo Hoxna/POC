@@ -1,5 +1,4 @@
-# from .\
-import aws_credentials
+from .import aws_credentials
 import boto3
 import subprocess
 
@@ -12,46 +11,44 @@ class Truck:
 
     @property
     def folder_list(self):
+        """Return path"""
         s3_resource = boto3.resource('s3',
                                      aws_access_key_id=self.key_id,
-                                     aws_secret_access_key=self.secret_acc_key
-                                     )
-
+                                     aws_secret_access_key=self.secret_acc_key)
+        images_folder_list = []
+        trained_list = []
         my_bucket = s3_resource.Bucket(self.bucket)
         # full path list
-        path_list = [i.key for i in my_bucket.objects.all()]
-        # list of all folders in the bucket
-        folders_list = [i.split('/')[-2] for i in path_list]
-        return set(folders_list)
+        path_list = [obj.key for obj in my_bucket.objects.all()]
+
+        for item in path_list:
+            if item.endswith('.png'):
+                images_folder_list.append(item.split('/')[-2])
+            elif item.endswith('.ply'):
+                trained_list.append(item)
+        return {'folders': set(images_folder_list),  # separated folders with user images in bucket
+                'models': trained_list,  # paths to 3D models for streamlit downloader
+                'path_list': set(path_list),
+                }
 
     def folder_exists(self, folder: str):
-        return True if folder in self.folder_list else False
+        """Check if folder with images exist in AWS bucket"""
+        return True if folder in self.folder_list['folders'] else False
 
     def bucket_to_ns(self, user_folder):
+        """Copy images from bucket to ns machine"""
         subprocess.run(('aws',
                         's3',
                         'cp',
-                        f's3://{self.bucket}/uploaded_images/{user_folder}',  # from
-                        f'/home/ubuntu/images_from_bucket/{user_folder}',  # to
+                        f's3://{self.bucket}/uploaded_images/{user_folder}',     # from
+                        f'/home/ubuntu/files/images_from_bucket/{user_folder}',  # to
                         '--recursive'
                         ))
-        # for test on local server
-
-        # just_print = ('aws',
-        #               's3',
-        #               'cp',
-        #               f's3://{self.bucket}/uploaded_images/{user_folder}',  # from
-        #               f'/home/ubuntu/images_from_bucket/{user_folder}',  # to
-        #               '--recursive')
-        # return just_print
 
     def ns_to_bucket(self, user_folder):
-        subprocess.run(('aws',
-                        's3',
-                        'cp',
-                        f'/home/ubuntu/trained_models/{user_folder}',  # from
-                        f's3://{self.bucket}/models_from_ns/{user_folder}',  # to
-                        '--recursive'
+        subprocess.run(('aws', 's3', 'cp',
+                        f'/home/ubuntu/files/pointcloud/{user_folder}/point_cloud.ply',  # from
+                        f's3://{self.bucket}/pointcloud/{user_folder}/',                   # to
                         ))
 
 
@@ -59,48 +56,47 @@ class Truck:
 
 
 def process_data(user_folder):
-    """Now works only with images"""
+    """Now works only with images. Process images to ns format. Preparation for train model"""
     subprocess.run(('ns-process-data',
                     'images',
-                    '--data',
-                    f'/home/ubuntu/images_from_bucket/{user_folder}',
-                    '--output-dir',
-                    f'/home/ubuntu/processed_data/{user_folder}'
+                    '--sfm-tool', 'hloc',
+                    '--feature-type', 'superpoint',
+                    '--data', f'/home/ubuntu/files/images_from_bucket/{user_folder}',
+                    '--output-dir', f'/home/ubuntu/files/processed_data/{user_folder}'
                     ))
-
-    # result = ('ns-process-data',
-    #           'images',
-    #           '--data',
-    #           f'/home/ubuntu/images_from_bucket/{user_folder}',
-    #           '--output-dir',
-    #           f'/home/ubuntu/processed_data/{user_folder}')
-    # return result
 
 
 def ns_train(user_folder):
-    subprocess.run(('ns-train',
+    """Start train process"""
+    subprocess.run(['ns-train',
                     'nerfacto',
-                    '--data',
-                    f'/home/ubuntu/processed_data/{user_folder}',
-                    '--output-dir',
-                    f'/home/ubuntu/trained_models/{user_folder}'
-                    ))
+                    '--data', f'/home/ubuntu/files/processed_data/{user_folder}',
+                    '--output-dir', f'/home/ubuntu/files/trained_models/{user_folder}'])
 
-    # result = ('ns-train',
-    #           'nerfacto',
-    #           '--data',
-    #           f'/home/ubuntu/processed_data/{user_folder}',
-    #           '--output-dir',
-    #           f'/home/ubuntu/trained_models/{user_folder}'
-    #           )
-    # return result
+
+# def ns_train_simulation(user_folder):
+#     """Use it on slow computers instead def ns_train. Allows you to simulate train proces in fast mode"""
+#     subprocess.run(('ns-train', 'nerfacto',
+#                     '--data', f'/home/ubuntu/files/processed_data/{user_folder}',
+#                     '--output-dir', f'/home/ubuntu/files/trained_models/simulation/{user_folder}'
+#                     '--pipeline.datamanager.train-num-rays-per-batch', '1000',
+#                     '--pipeline.model.eval-num-rays-per-chunk', '1000',
+#                     '--pipeline.datamanager.eval-num-rays-per-batch', '500',
+#                     '--trainer.max-num-iterations', '70'))
+
+
+def ns_export(user_folder):
+    with open(r'/home/ubuntu/files/path.txt', 'r') as path:
+        yaml_path = path.read()
+
+    subprocess.run(['ns-export',
+                    'pointcloud',
+                    '--load-config', f'{yaml_path}',
+                    '--output-dir', f'/home/ubuntu/files/pointcloud/{user_folder}/'])
 
 
 aws_truck = Truck(aws_credentials.AWSAccessKeyId, aws_credentials.AWSSecretKey, aws_credentials.AWSbucket)
 
+
 if __name__ == '__main__':
-    # print(aws_truck.folder_exists('teft'))
-    # print(aws_truck.folder_exists('test'))
-    #    print(aws_truck.folder_exists('test'))
-    # print(type(aws_truck.folder_list))
     pass

@@ -1,11 +1,16 @@
+activate your environment
+```conda activate nerfstudio```
 
-Python -m pip install --upgrade pip
+Upgrade pip:
+```pip install --upgrade pip```
 
-Use 'boto3' to upload files to AWS S3,:
-# pip install streamlit boto3
+Install Streamlit, boto3 and s3fs for interaction with AWS:
+```python -m pip install streamlit boto3 s3fs```
 
-To run "Hello world":
-# streamlit hello
+Run streamlit uploader file:
 
+### The above steps have already been completed on cloud machine so you can just activate environment and run next command:
 To run your streamlit project:
-# streamlit run my_project_name.py
+```streamlit run streamlit_uploader.py```
+
+After this you will a ble to upload your files to bucket
