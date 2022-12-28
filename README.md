@@ -49,20 +49,24 @@ now django app will be able on cloud server ip address
 
 ## Diagram
 
-![image](https://user-images.githubusercontent.com/2309907/206215878-a8fc6f85-7645-4c54-b36f-6a4056b40a32.png)
+![image](https://user-images.githubusercontent.com/2309907/209835984-00d70920-20b9-4fc8-8f8e-9847731bd9b2.png)
+
 
 ```
 Mobile App
 S3
+Upstash Queue
 NerfStudio
 
 simulated with webpage:note --> Mobile App
 django:note --> NerfStudio
 
 Mobile App-upload images->S3
-Mobile App-convert request->NerfStudio
+Mobile App-convert request->Upstash Queue
+NerfStudio-pull job->Upstash Queue
 NerfStudio-download images->S3
 NerfStudio-convert->NerfStudio
 NerfStudio-upload 3d->S3
 Mobile App-get 3D->S3
+
 ```
