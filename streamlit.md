@@ -1,16 +1,11 @@
-activate your environment
-```conda activate nerfstudio```
+# Streamlit installation and deployment
 
-Upgrade pip:
-```pip install --upgrade pip```
+#### We use separated Streamlit application for uploading files
+## Instruction
+Deployment instruction https://streamlit.io/cloud, 
+use https://github.com/Mrhetsko/streamlit.git link streamlit or create your own app.
+Requirements will be installed automatic by streamlit server.
+After you copy git repository use app settings to set secrets.
 
-Install Streamlit, boto3 and s3fs for interaction with AWS:
-```python -m pip install streamlit boto3 s3fs```
 
-Run streamlit uploader file:
-
-### The above steps have already been completed on cloud machine so you can just activate environment and run next command:
-To run your streamlit project:
-```streamlit run streamlit_uploader.py```
-
-After this you will a ble to upload your files to bucket
+Done
