@@ -1,8 +1,9 @@
 # About
 
-The project makes it possible to use the nerfstudio without CLI.
+The project makes it possible to use the nerfstudio by using web UI.
 It is intended for using on AWS cloud servers.
 
+In addition to this repository you need use also Streamlit with QStash, https://github.com/Mrhetsko/streamlit 
 
 # Quickstart
 
@@ -27,7 +28,7 @@ and second:
 
 CUDA must be installed on the system. Has been tested with version 11.7. Installing CUDA [here](https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html)
 
-## 2.nginx
+## 2. nginx
 To be able to access django app with ip address you need install nginx server
 https://ubuntu.com/tutorials/install-and-configure-nginx#4-setting-up-virtual-host
 ```sudo apt update```,
@@ -37,7 +38,17 @@ change server_name:
 ```sudo nano /etc/nginx/sites-available/default```, change "servet_name" to your ip address
 and restart nginx ```sudo service nginx restart```
 
-## 3.Run
+## 3. Streamlit and QStash
+
+
+We use the QStash as a part of Streamlit app to create a queue of model training in case we have many machines
+At the same time Streamlit upload users images and creates a task (message) for QStash application, after that QStash 
+send request to free training machine.
+  Go to Qstash https://console.upstash.com/qstash, SignIn, open QStash tab. Create your Topic and set the endpoint/s.
+On the details tab you can generate your own cURL command and convert it to Python code here https://www.scrapingbee.com/curl-converter/python/
+
+
+## Run
 activate your conda environment, navigate to datatruck folder, run
 ```python manage.py runserver```
 now django app will be able on cloud server ip address

@@ -1,10 +1,13 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+
 from .import cargo as cli
 
 
+@csrf_exempt
 def index(request):
     if request.method == "POST":
-        user_folder = request.POST.get('bucket_path')
+        user_folder = request.POST.get('project_name')
         if cli.aws_truck.folder_exists(user_folder):
             message = f'Folder name: "{user_folder}"'
 
