@@ -81,3 +81,30 @@ NerfStudio-upload 3d->S3
 Mobile App-get 3D->S3
 
 ```
+
+## Connection between Unity application and backend
+
+![gleek-cUiIFGU1GzozjlUtyXxJOg (2)](https://user-images.githubusercontent.com/2309907/210619536-e267c969-1a14-409e-a8e6-3b9581dac4e4.png)
+
+```
+Unity
+S3
+Backend
+Queue
+Training
+
+Unity-create project->Backend
+Backend-S3 url to upload images->Unity
+
+Unity-upload images/video->S3
+Unity-training->Backend
+
+Backend-training->Queue
+Queue-tarining->Training
+Training-upload 3D->S3
+
+Unity-get project details->Backend
+Backend-S3 url to 3d model->Unity
+Unity-download 3d model->S3
+```
+
